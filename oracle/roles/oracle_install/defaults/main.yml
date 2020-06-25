@@ -1,0 +1,27 @@
+---
+oracle_version: 19c  # 11gR2, 12cR1, 12cR2
+#installing_version: oracle19_install.yml
+oracle_edition: EE
+oracle_home: /u01/app/oracle/product/19.3.0.0/dbhome_1
+oracle_base: /u01/app/oracle
+ora_inventory: /u01/app/oraInventory
+fra: /u01/app/oracle/fast_recovery_area
+oradata: /u02/app/oracle/oradata
+oracle_owner: oracle
+oracle_group: oinstall
+
+
+preinstall_packges:
+  - { package: 'oracle-database-preinstall-19c', version: '19c' }
+
+
+directories:
+  - { path: '{{ oracle_home }}', state: 'directory', owner: '{{ oracle_owner }}', group: '{{ oracle_group }}' }
+  - { path: '{{ ora_inventory }}', state: 'directory', owner: '{{ oracle_owner }}', group: '{{ oracle_group }}' }
+  - { path: '{{ fra }}', state: 'directory', owner: '{{ oracle_owner }}', group: '{{ oracle_group }}' }
+  - { path: '{{ oradata }}', state: 'directory', owner: '{{ oracle_owner }}', group: '{{ oracle_group }}' }
+
+
+
+installing_version:
+  - { file: 'oracle19_install.yml', version: '19c' }

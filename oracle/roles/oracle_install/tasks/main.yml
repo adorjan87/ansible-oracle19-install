@@ -1,0 +1,39 @@
+ #tasks file for roles/folders
+---
+#- name: Include distribution specific variable
+#  include_vars: "vars_oracle{{ oracle_version }}.yml"
+
+
+- name: Preinstall package
+  yum:
+    name: '{{ item.package }}'
+    state: present
+  loop: '{{ preinstall_packges|flatten }}'
+  when:
+    - item.version == oracle_version
+
+
+- name: Create oracle binarie's folders
+  file:
+    path: '{{ item.path }}'
+    state: '{{ item.state }}'
+    owner: '{{ item.owner }}'
+    group: '{{ item.group }}'
+  loop: "{{ directories|flatten }}"
+
+- name: Check if the dir is empty
+  command: ls '{{ oracle_home }}'
+  register: command_output
+
+- name: End play if directory isn't empty
+  fail:
+    msg: oracle_home nem üres
+  when: command_output.stdout != ""
+
+
+- name: Install oracle
+  #include_tasks: "oracle19_install.yml"
+  include_tasks: '{{ item.file }}'
+  loop: '{{ installing_version|flatten }}'
+  when:
+    - item.version == oracle_version

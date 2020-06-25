@@ -1,0 +1,21 @@
+---
+- name: Unzip
+  unarchive:
+    src: ./oracle19/Oracle19.3.0.zip
+    dest: '{{ oracle_home }}'
+    owner: '{{ oracle_owner }}'
+    group: '{{ oracle_group }}'
+
+
+- name: Copy response file
+  template:
+    src: ./templates/19_install.j2
+    dest: /home/oracle/install.rsp
+    owner: '{{ oracle_owner }}'
+    group: '{{ oracle_group }}'
+
+
+- name: Install
+  shell: '{{ oracle_home }}/runInstaller -silent -responseFile /home/oracle/install.rsp'
+  become: true
+  become_user: oracle
